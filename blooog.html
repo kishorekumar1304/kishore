@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microblogging with Like Button</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .post {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .like-button {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+        .like-count {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Microblogging</h1>
+<div id="posts"></div>
+<textarea id="newPost" rows="3" placeholder="What's on your mind?" style="width: 100%;"></textarea>
+<button id="submitPost">Post</button>
+
+<script>
+    let posts = [];
+
+    document.getElementById('submitPost').addEventListener('click', function() {
+        const postContent = document.getElementById('newPost').value;
+        if (postContent.trim()) {
+            const newPost = {
+                content: postContent,
+                likes: 0
+            };
+            posts.push(newPost);
+            document.getElementById('newPost').value = '';
+            renderPosts();
+        }
+    });
+
+    function renderPosts() {
+        const postsContainer = document.getElementById('posts');
+        postsContainer.innerHTML = '';
+
+        posts.forEach((post, index) => {
+            const postElement = document.createElement('div');
+            postElement.className = 'post';
+            postElement.innerHTML = `
+                <p>${post.content}</p>
+                <span class="like-button" onclick="likePost(${index})">Like</span>
+                <span class="like-count">${post.likes} Likes</span>
+            `;
+            postsContainer.appendChild(postElement);
+        });
+    }
+
+    function likePost(index) {
+        posts[index].likes++;
+        renderPosts();
+    }
+</script>
+
+</body>
+</html>
