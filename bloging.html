@@ -14,11 +14,12 @@
         #postForm {
             margin-bottom: 20px;
         }
-        #postInput {
+        #usernameInput, #postInput {
             width: 80%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            margin-bottom: 10px;
         }
         #posts {
             margin-top: 20px;
@@ -68,6 +69,7 @@
 
 <h1>Microblogging Application</h1>
 <div id="postForm">
+    <input type="text" id="usernameInput" placeholder="Enter your username" />
     <input type="text" id="postInput" placeholder="What's on your mind?" />
     <input type="file" id="imageInput" accept="image/*" />
     <button onclick="addPost()">Post</button>
@@ -79,13 +81,26 @@
     let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
     function addPost() {
+        const usernameInput = document.getElementById('usernameInput');
         const postInput = document.getElementById('postInput');
         const imageInput = document.getElementById('imageInput');
+        const username = usernameInput.value.trim();
         const postText = postInput.value.trim();
         const imageFile = imageInput.files[0];
 
+        if (!username) {
+            alert('Please enter a username.');
+            return;
+        }
+
+        if (imageFile && !['image/jpeg', 'image/png', 'image/gif'].includes(imageFile.type)) {
+            alert('Please upload a valid image (JPEG, PNG, GIF).');
+            return;
+        }
+
         if (postText || imageFile) {
             const newPost = {
+                username: username,
                 text: postText,
                 likes: 0,
                 dislikes: 0,
@@ -97,6 +112,7 @@
             renderPosts();
             postInput.value = '';
             imageInput.value = '';
+            usernameInput.value = '';
         }
     }
 
@@ -108,6 +124,7 @@
             const postContainer = document.createElement('div');
             postContainer.className = 'post';
             postContainer.innerHTML = `
+                <strong>${post.username}</strong>
                 <p>${post.text}</p>
                 ${post.image ? `<img src="${post.image}" class="imagePreview" alt="Post Image" />` : ''}
                 <button class="button like" onclick="likePost(${index})">Like 👍</button>
@@ -127,7 +144,7 @@
                     </div>
                 </div>
                 <div class="commandsList">
-                    ${post.commands.map(command => `<div>${command}</div>`).join('')}
+                    ${post.commands.map(command => `<div><strong>${command.username}:</strong> ${command.text}</div>`).join('')}
                 </div>
             `;
             postsContainer.appendChild(postContainer);
@@ -158,8 +175,10 @@
     function submitCommand(index) {
         const commandInput = document.querySelector(`#commandInput${index} input`);
         const commandText = commandInput.value.trim();
+        const username = posts[index].username; // Get the post's username
+
         if (commandText) {
-            posts[index].commands.push(commandText);
+            posts[index].commands.push({ username, text: commandText });
             commandInput.value = '';
             toggleCommandInput(index);
             savePosts();
@@ -168,7 +187,8 @@
     }
 
     function addEmoji(index, emoji) {
-        posts[index].commands.push(emoji);
+        const username = posts[index].username; // Get the post's username
+        posts[index].commands.push({ username, text: emoji });
         savePosts();
         renderPosts();
     }
