@@ -3,159 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 24/7 FOOD DELIVERY </title>
+    <title>24/7 FOOD DELIVERY</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        #restaurant-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .restaurant {
-            border: 1px solid #ccc;
-            margin: 10px 0;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .restaurant img {
-            width: 100px;
-            height: auto;
-            margin-right: 20px;
-            cursor: pointer;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        /* Modal styles for login and image */
-        #modal, #image-modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-
-        #modal-content, #image-modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 300px;
-        }
-
-        #large-image {
-            width: 100%;
-            height: auto;
-        }
-
-        /* Order section styles */
-        .order-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-        }
-
-        .box {
-            border: 1px solid #ccc;
-            padding: 20px;
-            width: 30%;
-            text-align: center;
-        }
-
-        /* Food items styles */
-        #food-items {
-            margin-top: 20px;
-        }
-
-        #food-items ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #food-items li {
-            margin: 5px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #food-items button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-
-        #total-cost {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        #order-summary {
-            margin-top: 20px;
-            display: none;
-        }
-
-        /* Payment methods */
-        .payment-method {
-            margin-top: 20px;
-        }
-
-        .payment-box {
-            border: 1px solid #ccc;
-            padding: 20px;
-            width: 30%;
-            text-align: center;
-        }
-
-        /* Review section */
-        #review-section {
-            display: none;
-            margin-top: 20px;
-        }
-
-        #review-input {
-            width: 90%;
-            height: 60px;
-            margin-top: 10px;
-        }
-
-        #submitReview {
-            margin-top: 10px;
-        }
-
-        /* Confirmation message */
-        #confirmation-message {
-            margin-top: 20px;
-            color: green;
-            font-weight: bold;
-            display: none;
-        }
+        body { font-family: Arial; margin: 20px; }
+        #restaurant-list { display: flex; flex-direction: column; }
+        .restaurant { border: 1px solid #ccc; margin: 10px 0; padding: 10px; display: flex; align-items: center; }
+        .restaurant img { width: 100px; margin-right: 20px; cursor: pointer; }
+        button { background-color: #28a745; color: white; border: none; padding: 10px; cursor: pointer; }
+        #modal, #image-modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 60px; }
+        #modal-content, #image-modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 300px; }
+        #large-image { width: 100%; }
+        .order-section { display: flex; justify-content: space-between; margin-top: 40px; }
+        .box, .payment-box { border: 1px solid #ccc; padding: 20px; width: 30%; text-align: center; }
+        #food-items ul { list-style-type: none; padding: 0; }
+        #food-items li { margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }
+        #food-items button { background-color: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 3px; }
+        #total-cost, #confirmation-message { margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
     <h1>Food Delivery</h1>
     <p>Nearby Restaurants are...</p>
-    
     <div id="restaurant-list">
         <div class="restaurant">
             <img src="https://www.yello.ae/img/ae/e/1652795460-18-showbiz-pizza-place.png" alt="Pizza Place" onclick="openImageModal(this.src)">
@@ -185,31 +53,23 @@
             </div>
         </div>
     </div>
-
-    <!-- Login Modal -->
     <div id="modal">
         <div id="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Login</h2>
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" required><br><br>
-            <label for="location">My Location:</label><br>
-            <input type="text" id="location" required placeholder="Enter your location"><br><br>
+            <label for="username">Username:</label><input type="text" id="username" required><br>
+            <label for="location">My Location:</label><input type="text" id="location" required placeholder="Enter your location"><br>
             <div id="food-items"></div>
             <div id="total-cost">Total Cost: $0.00</div>
             <button id="cancelOrder" onclick="cancelOrder()">Cancel Order</button>
         </div>
     </div>
-
-    <!-- Image Modal -->
     <div id="image-modal">
         <div id="image-modal-content">
             <span class="close" onclick="closeImageModal()">&times;</span>
             <img id="large-image" src="" alt="Restaurant Image">
         </div>
     </div>
-
-    <!-- Order Section -->
     <div class="order-section">
         <div class="box">
             <h3>Orders</h3>
@@ -218,12 +78,8 @@
         </div>
         <div class="payment-box">
             <h3>Payment Method</h3>
-            <label>
-                <input type="radio" name="payment" value="cash" checked> Cash on Delivery
-            </label><br>
-            <label>
-                <input type="radio" name="payment" value="online"> Online Payment
-            </label>
+            <label><input type="radio" name="payment" value="cash" checked> Cash on Delivery</label><br>
+            <label><input type="radio" name="payment" value="online"> Online Payment</label>
         </div>
         <div class="box">
             <h3>Review</h3>
@@ -234,111 +90,60 @@
             </div>
         </div>
     </div>
-
-    <!-- Confirmation Box -->
-    <div id="confirmation-message">
-        Your order has been placed successfully!
-    </div>
+    <div id="confirmation-message">Your order has been placed successfully!</div>
     <button onclick="confirmOrder()">Confirm Order</button>
 
     <script>
-        let selectedRestaurant = '';
-        let totalCost = 0;
-        let orderedItems = [];
-        const reviews = {};
-
+        let selectedRestaurant = '', totalCost = 0, orderedItems = [], reviews = {};
         const menuItems = {
-            "Pizza Place": [
-                { name: "Margherita Pizza", price: 10.99, image: "https://media.istockphoto.com/id/1280329631/photo/italian-pizza-margherita-with-tomatoes-and-mozzarella-cheese-on-wooden-cutting-board-close-up.jpg?s=612x612&w=0&k=20&c=CFDDjavIC5l8Zska16UZRZDXDwd47fwmRsUNzY0Ym6o=" },
-                { name: "Pepperoni Pizza", price: 12.99, image: "https://media.istockphoto.com/id/521403691/photo/hot-homemade-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=PaISuuHcJWTEVoDKNnxaHy7L2BTUkyYZ06hYgzXmTbo=" },
-                { name: "Veggie Pizza", price: 11.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiVGAmHFUdXFYicWIdyRi4yOeopHzRC688KQ&s" }
-            ],
-            "Sushi Spot": [
-                { name: "California Roll", price: 8.99, image: "https://media.istockphoto.com/id/115547349/photo/california-roll.jpg?s=612x612&w=0&k=20&c=cMqL7kKiMZdfRYe0HLhpo9IptPSTeULGgYj7PQzUo28=" },
-                { name: "Tuna Sashimi", price: 15.99, image: "https://getfish.com.au/cdn/shop/articles/Step_3_-_Tuna_Lime_Sashimi.png?v=1717049124" },
-                { name: "Miso Soup", price: 4.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/aq1n9ewACoBzXxVRxszxl/d008f64a8c4a2a1bb051b2f1b05b4794/AdobeStock_76848416.jpeg" }
-            ],
-            "Burger Joint": [
-                { name: "Cheeseburger", price: 9.99, image: "https://cdn.pixabay.com/photo/2024/04/26/05/52/cheeseburger-8721189_1280.png" },
-                { name: "Veggie Burger", price: 8.99, image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZlZyUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D" },
-                { name: "Fries", price: 3.99, image: "https://plus.unsplash.com/premium_photo-1672774750509-bc9ff226f3e8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D" }
-            ]
+            "Pizza Place": [{ name: "Margherita Pizza", price: 10.99, image: "https://media.istockphoto.com/id/1280329631/photo/italian-pizza-margherita-with-tomatoes-and-mozzarella-cheese-on-wooden-cutting-board-close-up.jpg?s=612x612&w=0&k=20&c=CFDDjavIC5l8Zska16UZRZDXDwd47fwmRsUNzY0Ym6o=" },
+                            { name: "Pepperoni Pizza", price: 12.99, image: "https://media.istockphoto.com/id/521403691/photo/hot-homemade-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=PaISuuHcJWTEVoDKNnxaHy7L2BTUkyYZ06hYgzXmTbo=" },
+                            { name: "Veggie Pizza", price: 11.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiVGAmHFUdXFYicWIdyRi4yOeopHzRC688KQ&s" }],
+            "Sushi Spot": [{ name: "California Roll", price: 8.99, image: "https://media.istockphoto.com/id/115547349/photo/california-roll.jpg?s=612x612&w=0&k=20&c=cMqL7kKiMZdfRYe0HLhpo9IptPSTeULGgYj7PQzUo28=" },
+                           { name: "Tuna Sashimi", price: 15.99, image: "https://getfish.com.au/cdn/shop/articles/Step_3_-_Tuna_Lime_Sashimi.png?v=1717049124" },
+                           { name: "Miso Soup", price: 4.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/aq1n9ewACoBzXxVRxszxl/d008f64a8c4a2a1bb051b2f1b05b4794/AdobeStock_76848416.jpeg" }],
+            "Burger Joint": [{ name: "Cheeseburger", price: 9.99, image: "https://cdn.pixabay.com/photo/2024/04/26/05/52/cheeseburger-8721189_1280.png" },
+                             { name: "Veggie Burger", price: 8.99, image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZlZyUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D" },
+                             { name: "Fries", price: 3.99, image: "https://plus.unsplash.com/premium_photo-1672774750509-bc9ff226f3e8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D" }]
         };
 
         function openModal(restaurantName) {
             selectedRestaurant = restaurantName;
-            const items = menuItems[restaurantName];
             const foodItemsDiv = document.getElementById('food-items');
-            foodItemsDiv.innerHTML = '<h3>Select Items:</h3><ul>' + items.map(item => `
-                <li>
-                    <img src="${item.image}" alt="${item.name}" style="width: 50px; height: auto;"> 
-                    ${item.name} - $${item.price.toFixed(2)} 
-                    <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
-                </li>
-            `).join('') + '</ul>';
-            totalCost = 0;
-            orderedItems = [];
+            foodItemsDiv.innerHTML = '<h3>Select Items:</h3><ul>' + menuItems[restaurantName].map(item => `
+                <li><img src="${item.image}" alt="${item.name}" style="width: 50px;"> ${item.name} - $${item.price.toFixed(2)} 
+                <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button></li>`).join('') + '</ul>';
+            totalCost = 0; orderedItems = [];
             document.getElementById('total-cost').innerText = `Total Cost: $0.00`;
             document.getElementById('modal').style.display = 'block';
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        function openImageModal(imageSrc) {
-            document.getElementById('large-image').src = imageSrc;
-            document.getElementById('image-modal').style.display = 'block';
-        }
-
-        function closeImageModal() {
-            document.getElementById('image-modal').style.display = 'none';
-        }
-
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function openImageModal(imageSrc) { document.getElementById('large-image').src = imageSrc; document.getElementById('image-modal').style.display = 'block'; }
+        function closeImageModal() { document.getElementById('image-modal').style.display = 'none'; }
+        
         function addToCart(itemName, itemPrice) {
             totalCost += itemPrice;
             orderedItems.push({ name: itemName, price: itemPrice });
             document.getElementById('total-cost').innerText = `Total Cost: $${totalCost.toFixed(2)}`;
-            alert(`${itemName} has been added to your cart. Current total: $${totalCost.toFixed(2)}.`);
+            alert(`${itemName} has been added. Current total: $${totalCost.toFixed(2)}.`);
         }
 
         function viewOrders() {
             const orderSummary = document.getElementById('order-summary');
-            if (orderedItems.length === 0) {
-                orderSummary.innerHTML = `<p>No items ordered yet.</p>`;
-            } else {
-                orderSummary.innerHTML = `
-                    <h3>Your Orders:</h3>
-                    <ul>
-                        ${orderedItems.map(item => `
-                            <li>${item.name} - $${item.price.toFixed(2)}</li>
-                        `).join('')}
-                    </ul>
-                    <strong>Total Cost: $${totalCost.toFixed(2)}</strong>
-                `;
-            }
+            orderSummary.innerHTML = orderedItems.length ? `
+                <h3>Your Orders:</h3><ul>${orderedItems.map(item => `<li>${item.name} - $${item.price.toFixed(2)}</li>`).join('')}</ul>
+                <strong>Total Cost: $${totalCost.toFixed(2)}</strong>` : `<p>No items ordered yet.</p>`;
             orderSummary.style.display = 'block';
         }
 
         function cancelOrder() {
-            totalCost = 0;
-            orderedItems = [];
+            totalCost = 0; orderedItems = [];
             document.getElementById('total-cost').innerText = `Total Cost: $0.00`;
-            document.getElementById('food-items').innerHTML = '';
-            document.getElementById('order-summary').innerHTML = '';
+            document.getElementById('food-items').innerHTML = ''; document.getElementById('order-summary').innerHTML = '';
             document.getElementById('confirmation-message').style.display = 'none';
             alert("Your order has been cancelled.");
         }
-
-        document.getElementById('submitOrder').onclick = async function() {
-            const username = document.getElementById('username').value;
-            const location = document.getElementById('location').value;
-
-            // Example submission logic (no backend handling)
-            console.log({ restaurantName: selectedRestaurant, username, location });
-
-            alert("Login successful! Please select your items.");
-        };
 
         function toggleReview() {
             const reviewSection = document.getElementById('review-section');
@@ -347,32 +152,21 @@
 
         function submitReview() {
             const reviewText = document.getElementById('review-input').value;
-            if (!selectedRestaurant || !reviewText) {
-                alert("Please select a restaurant and write a review.");
-                return;
-            }
-            if (!reviews[selectedRestaurant]) {
-                reviews[selectedRestaurant] = [];
-            }
+            if (!selectedRestaurant || !reviewText) { alert("Please select a restaurant and write a review."); return; }
+            if (!reviews[selectedRestaurant]) reviews[selectedRestaurant] = [];
             reviews[selectedRestaurant].push(reviewText);
-            alert("Review submitted!");
-            document.getElementById('review-input').value = ''; // Clear the input
-            console.log(reviews); // Log reviews for debugging
+            alert("Review submitted!"); document.getElementById('review-input').value = '';
+            console.log(reviews);
         }
 
         function confirmOrder() {
             document.getElementById('confirmation-message').style.display = 'block';
-            document.getElementById('confirmation-message').innerText = "Your order has been placed successfully!";
             closeModal();
         }
 
         window.onclick = function(event) {
-            if (event.target === document.getElementById('modal')) {
-                closeModal();
-            }
-            if (event.target === document.getElementById('image-modal')) {
-                closeImageModal();
-            }
+            if (event.target === document.getElementById('modal')) closeModal();
+            if (event.target === document.getElementById('image-modal')) closeImageModal();
         };
     </script>
 </body>
