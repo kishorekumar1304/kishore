@@ -7,126 +7,373 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+            margin: 20px;
         }
-        header {
-            text-align: center;
-            background: #333;
-            color: #fff;
-            padding: 10px 0;
-        }
-        .menu {
+
+        #restaurant-list {
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
-        .item {
-            background: white;
+
+        .restaurant {
             border: 1px solid #ccc;
-            border-radius: 5px;
-            margin: 10px;
+            margin: 10px 0;
             padding: 10px;
-            width: 200px;
-            text-align: center;
+            display: flex;
+            align-items: center;
         }
-        .cart {
-            margin-top: 20px;
-            padding: 10px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+
+        .restaurant img {
+            width: 100px;
+            height: auto;
+            margin-right: 20px;
+            cursor: pointer;
         }
-        .price {
-            font-weight: bold;
-        }
+
         button {
             background-color: #28a745;
             color: white;
             border: none;
             padding: 10px;
             cursor: pointer;
-            border-radius: 5px;
         }
-        button:hover {
-            background-color: #218838;
-        }
-        .success-message {
+
+        /* Modal styles for login and image */
+        #modal, #image-modal {
             display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        #modal-content, #image-modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+        }
+
+        #large-image {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Order section styles */
+        .order-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+        }
+
+        /* Food items styles */
+        #food-items {
+            margin-top: 20px;
+        }
+
+        #food-items ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #food-items li {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #food-items button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        #total-cost {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #order-summary {
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* Payment methods */
+        .payment-method {
+            margin-top: 20px;
+        }
+
+        .payment-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+        }
+
+        /* Review section */
+        #review-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #review-input {
+            width: 90%;
+            height: 60px;
             margin-top: 10px;
+        }
+
+        #submitReview {
+            margin-top: 10px;
+        }
+
+        /* Confirmation message */
+        #confirmation-message {
+            margin-top: 20px;
             color: green;
             font-weight: bold;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Food Delivery</h1>
-    </header>
-    <div class="menu">
-        <div class="item">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlMyzfmXp2bWMGCMLw2JC4uXpXR1qEGTCBvw&s" alt="Burger">
-            <h2>Burger</h2>
-            <p>Delicious burger with all the fixings.</p>
-            <span class="price">$12</span>
-            <button class="add-to-cart" data-name="Burger" data-price="12">Add to Cart</button>
+    <h1>Food Delivery</h1>
+    <p>Nearby Restaurants are...</p>
+    
+    <div id="restaurant-list">
+        <div class="restaurant">
+            <img src="https://www.yello.ae/img/ae/e/1652795460-18-showbiz-pizza-place.png" alt="Pizza Place" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Pizza Place</h2>
+                <p>Location: 123 Pizza St, Food City</p>
+                <p>Rating: ★★★★☆ (4.5)</p>
+                <button onclick="openModal('Pizza Place')">Order Food</button>
+            </div>
         </div>
-        <div class="item">
-            <img src="https://t3.ftcdn.net/jpg/05/60/70/82/360_F_560708240_pMZPOuSfvblWGRoaiZFLT4wiFTzQPwQe.jpg" alt="Pizza">
-            <h2>Pizza</h2>
-            <p>Classic cheese pizza with tomato sauce.</p>
-            <span class="price">$10</span>
-            <button class="add-to-cart" data-name="Pizza" data-price="10">Add to Cart</button>
+        <div class="restaurant">
+            <img src="https://c8.alamy.com/comp/A2XKM7/tokyo-japan-asakusa-sushi-restaurant-on-shopping-street-near-asakusa-A2XKM7.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Sushi Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
         </div>
-        <div class="item">
-            <img src="https://www.licious.in/blog/wp-content/uploads/2022/06/chicken-hyderabadi-biryani-01.jpg" alt="Biryani">
-            <h2>Biryani</h2>
-            <p>Always a favorite food.</p>
-            <span class="price">$15</span>
-            <button class="add-to-cart" data-name="Biryani" data-price="15">Add to Cart</button>
+        <div class="restaurant">
+            <img src="https://thumbs.dreamstime.com/b/rotterdam-netherlands-wow-burger-fast-food-restaurant-shop-front-street-display-entrance-sign-signage-logo-184752494.jpg" alt="Burger Joint" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Burger Joint</h2>
+                <p>Location: 789 Burger Blvd, Food City</p>
+                <p>Rating: ★★★☆☆ (3.8)</p>
+                <button onclick="openModal('Burger Joint')">Order Food</button>
+            </div>
         </div>
     </div>
-    <div class="cart">
-        <h2>Cart</h2>
-        <ul id="cart-items"></ul>
-        <h3>Total: $<span id="cart-total">0.00</span></h3>
-        <button id="place-order">Place Order</button>
-        <div class="success-message" id="success-message">Your order has been placed successfully!</div>
+
+    <!-- Login Modal -->
+    <div id="modal">
+        <div id="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Login</h2>
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" required><br><br>
+            <label for="location">My Location:</label><br>
+            <input type="text" id="location" required placeholder="Enter your location"><br><br>
+            <div id="food-items"></div>
+            <div id="total-cost">Total Cost: $0.00</div>
+            <button id="cancelOrder" onclick="cancelOrder()">Cancel Order</button>
+        </div>
     </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal">
+        <div id="image-modal-content">
+            <span class="close" onclick="closeImageModal()">&times;</span>
+            <img id="large-image" src="" alt="Restaurant Image">
+        </div>
+    </div>
+
+    <!-- Order Section -->
+    <div class="order-section">
+        <div class="box">
+            <h3>Orders</h3>
+            <button onclick="viewOrders()">View Orders</button>
+            <div id="order-summary"></div>
+        </div>
+        <div class="payment-box">
+            <h3>Payment Method</h3>
+            <label>
+                <input type="radio" name="payment" value="cash" checked> Cash on Delivery
+            </label><br>
+            <label>
+                <input type="radio" name="payment" value="online"> Online Payment
+            </label>
+        </div>
+        <div class="box">
+            <h3>Review</h3>
+            <button onclick="toggleReview()">Write a Review</button>
+            <div id="review-section">
+                <textarea id="review-input" placeholder="Write your review here..."></textarea><br>
+                <button id="submitReview" onclick="submitReview()">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Box -->
+    <div id="confirmation-message">
+        Your order has been placed successfully!
+    </div>
+    <button onclick="confirmOrder()">Confirm Order</button>
+
     <script>
-        const cartItems = document.getElementById('cart-items');
-        const cartTotal = document.getElementById('cart-total');
-        const placeOrderButton = document.getElementById('place-order');
-        const successMessage = document.getElementById('success-message');
-        let total = 0;
+        let selectedRestaurant = '';
+        let totalCost = 0;
+        let orderedItems = [];
+        const reviews = {};
 
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', () => {
-                const name = button.getAttribute('data-name');
-                const price = parseFloat(button.getAttribute('data-price'));
-                
-                // Add item to cart
-                const li = document.createElement('li');
-                li.textContent = `${name} - $${price.toFixed(2)}`;
-                cartItems.appendChild(li);
+        const menuItems = {
+            "Pizza Place": [
+                { name: "Margherita Pizza", price: 10.99, image: "https://media.istockphoto.com/id/1280329631/photo/italian-pizza-margherita-with-tomatoes-and-mozzarella-cheese-on-wooden-cutting-board-close-up.jpg?s=612x612&w=0&k=20&c=CFDDjavIC5l8Zska16UZRZDXDwd47fwmRsUNzY0Ym6o=" },
+                { name: "Pepperoni Pizza", price: 12.99, image: "https://media.istockphoto.com/id/521403691/photo/hot-homemade-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=PaISuuHcJWTEVoDKNnxaHy7L2BTUkyYZ06hYgzXmTbo=" },
+                { name: "Veggie Pizza", price: 11.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiVGAmHFUdXFYicWIdyRi4yOeopHzRC688KQ&s" }
+            ],
+            "Sushi Spot": [
+                { name: "California Roll", price: 8.99, image: "https://media.istockphoto.com/id/115547349/photo/california-roll.jpg?s=612x612&w=0&k=20&c=cMqL7kKiMZdfRYe0HLhpo9IptPSTeULGgYj7PQzUo28=" },
+                { name: "Tuna Sashimi", price: 15.99, image: "https://getfish.com.au/cdn/shop/articles/Step_3_-_Tuna_Lime_Sashimi.png?v=1717049124" },
+                { name: "Miso Soup", price: 4.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/aq1n9ewACoBzXxVRxszxl/d008f64a8c4a2a1bb051b2f1b05b4794/AdobeStock_76848416.jpeg" }
+            ],
+            "Burger Joint": [
+                { name: "Cheeseburger", price: 9.99, image: "https://cdn.pixabay.com/photo/2024/04/26/05/52/cheeseburger-8721189_1280.png" },
+                { name: "Veggie Burger", price: 8.99, image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZlZyUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D" },
+                { name: "Fries", price: 3.99, image: "https://plus.unsplash.com/premium_photo-1672774750509-bc9ff226f3e8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D" }
+            ]
+        };
 
-                // Update total
-                total += price;
-                cartTotal.textContent = total.toFixed(2);
-            });
-        });
+        function openModal(restaurantName) {
+            selectedRestaurant = restaurantName;
+            const items = menuItems[restaurantName];
+            const foodItemsDiv = document.getElementById('food-items');
+            foodItemsDiv.innerHTML = '<h3>Select Items:</h3><ul>' + items.map(item => `
+                <li>
+                    <img src="${item.image}" alt="${item.name}" style="width: 50px; height: auto;"> 
+                    ${item.name} - $${item.price.toFixed(2)} 
+                    <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+                </li>
+            `).join('') + '</ul>';
+            totalCost = 0;
+            orderedItems = [];
+            document.getElementById('total-cost').innerText = `Total Cost: $0.00`;
+            document.getElementById('modal').style.display = 'block';
+        }
 
-        placeOrderButton.addEventListener('click', () => {
-            if (total > 0) {
-                successMessage.style.display = 'block';
-                cartItems.innerHTML = ''; // Clear cart items
-                cartTotal.textContent = '0.00'; // Reset total
-                total = 0; // Reset total amount
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function openImageModal(imageSrc) {
+            document.getElementById('large-image').src = imageSrc;
+            document.getElementById('image-modal').style.display = 'block';
+        }
+
+        function closeImageModal() {
+            document.getElementById('image-modal').style.display = 'none';
+        }
+
+        function addToCart(itemName, itemPrice) {
+            totalCost += itemPrice;
+            orderedItems.push({ name: itemName, price: itemPrice });
+            document.getElementById('total-cost').innerText = `Total Cost: $${totalCost.toFixed(2)}`;
+            alert(`${itemName} has been added to your cart. Current total: $${totalCost.toFixed(2)}.`);
+        }
+
+        function viewOrders() {
+            const orderSummary = document.getElementById('order-summary');
+            if (orderedItems.length === 0) {
+                orderSummary.innerHTML = `<p>No items ordered yet.</p>`;
             } else {
-                alert('Your cart is empty!');
+                orderSummary.innerHTML = `
+                    <h3>Your Orders:</h3>
+                    <ul>
+                        ${orderedItems.map(item => `
+                            <li>${item.name} - $${item.price.toFixed(2)}</li>
+                        `).join('')}
+                    </ul>
+                    <strong>Total Cost: $${totalCost.toFixed(2)}</strong>
+                `;
             }
-        });
+            orderSummary.style.display = 'block';
+        }
+
+        function cancelOrder() {
+            totalCost = 0;
+            orderedItems = [];
+            document.getElementById('total-cost').innerText = `Total Cost: $0.00`;
+            document.getElementById('food-items').innerHTML = '';
+            document.getElementById('order-summary').innerHTML = '';
+            document.getElementById('confirmation-message').style.display = 'none';
+            alert("Your order has been cancelled.");
+        }
+
+        document.getElementById('submitOrder').onclick = async function() {
+            const username = document.getElementById('username').value;
+            const location = document.getElementById('location').value;
+
+            // Example submission logic (no backend handling)
+            console.log({ restaurantName: selectedRestaurant, username, location });
+
+            alert("Login successful! Please select your items.");
+        };
+
+        function toggleReview() {
+            const reviewSection = document.getElementById('review-section');
+            reviewSection.style.display = reviewSection.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function submitReview() {
+            const reviewText = document.getElementById('review-input').value;
+            if (!selectedRestaurant || !reviewText) {
+                alert("Please select a restaurant and write a review.");
+                return;
+            }
+            if (!reviews[selectedRestaurant]) {
+                reviews[selectedRestaurant] = [];
+            }
+            reviews[selectedRestaurant].push(reviewText);
+            alert("Review submitted!");
+            document.getElementById('review-input').value = ''; // Clear the input
+            console.log(reviews); // Log reviews for debugging
+        }
+
+        function confirmOrder() {
+            document.getElementById('confirmation-message').style.display = 'block';
+            document.getElementById('confirmation-message').innerText = "Your order has been placed successfully!";
+            closeModal();
+        }
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('modal')) {
+                closeModal();
+            }
+            if (event.target === document.getElementById('image-modal')) {
+                closeImageModal();
+            }
+        };
     </script>
 </body>
 </html>
