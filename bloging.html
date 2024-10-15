@@ -11,10 +11,11 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
-        #postForm {
+        #loginForm, #postForm {
             margin-bottom: 20px;
+            display: none; /* Initially hidden */
         }
-        #usernameInput, #postInput {
+        #usernameInput, #imageInput {
             width: 80%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -63,14 +64,27 @@
             margin-top: 10px;
             border-radius: 5px;
         }
+        #welcomeMessage {
+            display: none;
+            font-size: 24px; /* Larger font size */
+            font-weight: bold; /* Bold text */
+            color: black; /* Black color */
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
 <h1>Microblogging Application</h1>
-<div id="postForm">
+
+<div id="loginForm">
     <input type="text" id="usernameInput" placeholder="Enter your username" />
-    <input type="text" id="postInput" placeholder="What's on your mind?" />
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="welcomeMessage"></div>
+
+<div id="postForm">
     <input type="file" id="imageInput" accept="image/*" />
     <button onclick="addPost()">Post</button>
 </div>
@@ -80,39 +94,52 @@
 <script>
     let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
-    function addPost() {
+    // Show the login form on page load
+    document.getElementById('loginForm').style.display = 'block';
+
+    function login() {
         const usernameInput = document.getElementById('usernameInput');
-        const postInput = document.getElementById('postInput');
-        const imageInput = document.getElementById('imageInput');
         const username = usernameInput.value.trim();
-        const postText = postInput.value.trim();
-        const imageFile = imageInput.files[0];
 
         if (!username) {
             alert('Please enter a username.');
             return;
         }
 
+        // Hide the login form and show the welcome message
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('welcomeMessage').innerHTML = `
+            <strong>Welcome, ${username}!</strong>
+        `;
+        document.getElementById('welcomeMessage').style.display = 'block';
+
+        // Show the post form
+        document.getElementById('postForm').style.display = 'block';
+    }
+
+    function addPost() {
+        const imageInput = document.getElementById('imageInput');
+        const username = document.getElementById('usernameInput').value.trim();
+        const imageFile = imageInput.files[0];
+
         if (imageFile && !['image/jpeg', 'image/png', 'image/gif'].includes(imageFile.type)) {
             alert('Please upload a valid image (JPEG, PNG, GIF).');
             return;
         }
 
-        if (postText || imageFile) {
+        if (imageFile) {
             const newPost = {
                 username: username,
-                text: postText,
+                text: '', // No text input
                 likes: 0,
                 dislikes: 0,
                 commands: [],
-                image: imageFile ? URL.createObjectURL(imageFile) : null
+                image: URL.createObjectURL(imageFile)
             };
             posts.push(newPost);
             savePosts();
             renderPosts();
-            postInput.value = '';
             imageInput.value = '';
-            usernameInput.value = '';
         }
     }
 
@@ -124,8 +151,9 @@
             const postContainer = document.createElement('div');
             postContainer.className = 'post';
             postContainer.innerHTML = `
-                <strong>${post.username}</strong>
-                <p>${post.text}</p>
+                <div>
+                    <strong>${post.username}</strong> posted:
+                </div>
                 ${post.image ? `<img src="${post.image}" class="imagePreview" alt="Post Image" />` : ''}
                 <button class="button like" onclick="likePost(${index})">Like 👍</button>
                 <button class="button dislike" onclick="dislikePost(${index})">Dislike 👎</button>
@@ -175,7 +203,7 @@
     function submitCommand(index) {
         const commandInput = document.querySelector(`#commandInput${index} input`);
         const commandText = commandInput.value.trim();
-        const username = posts[index].username; // Get the post's username
+        const username = posts[index].username;
 
         if (commandText) {
             posts[index].commands.push({ username, text: commandText });
@@ -187,7 +215,7 @@
     }
 
     function addEmoji(index, emoji) {
-        const username = posts[index].username; // Get the post's username
+        const username = posts[index].username;
         posts[index].commands.push({ username, text: emoji });
         savePosts();
         renderPosts();
