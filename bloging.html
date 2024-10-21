@@ -7,227 +7,280 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
         }
-        #loginForm, #postForm {
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form {
             margin-bottom: 20px;
-            display: none; /* Initially hidden */
         }
-        #usernameInput, #imageInput {
-            width: 80%;
+        .form input, .form textarea {
+            width: 100%;
             padding: 10px;
+            margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
-            margin-bottom: 10px;
         }
-        #posts {
+        .form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form button:hover {
+            background-color: #218838;
+        }
+        .posts {
             margin-top: 20px;
         }
         .post {
-            background: #fff;
+            background: #e9ecef;
             padding: 10px;
+            border-radius: 5px;
             margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
-        .button {
-            padding: 5px 10px;
+        .deleteButton, .likeButton, .dislikeButton {
+            background-color: #007bff;
             border: none;
-            border-radius: 3px;
+            color: white;
             cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
             margin-right: 5px;
         }
-        .like { background-color: #4CAF50; color: white; }
-        .dislike { background-color: #f44336; color: white; }
-        .command { background-color: #2196F3; color: white; }
-        .delete { background-color: #FF9800; color: white; }
-        .commandInput {
-            display: none;
+        .likeButton:hover, .dislikeButton:hover {
+            background-color: #0056b3;
+        }
+        .deleteButton:hover {
+            background-color: #dc3545;
+        }
+        .comment-section {
             margin-top: 10px;
         }
-        .commandsList {
-            margin-top: 5px;
-            color: #555;
-            font-style: italic;
+        .message {
+            color: red;
+            text-align: center;
         }
-        .emojiButton {
-            font-size: 20px;
-            cursor: pointer;
-            background: transparent;
+        .backButton {
+            background-color: #007bff;
             border: none;
-            margin-right: 5px;
-        }
-        .imagePreview {
-            max-width: 100%;
-            margin-top: 10px;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
             border-radius: 5px;
         }
-        #welcomeMessage {
-            display: none;
-            font-size: 24px; /* Larger font size */
-            font-weight: bold; /* Bold text */
-            color: black; /* Black color */
-            margin-bottom: 20px;
+        .backButton:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<h1>Microblogging Application</h1>
+<div class="container">
+    <h1>Microblogging App</h1>
+    
+    <!-- Registration Form -->
+    <div class="form" id="registerForm">
+        <h2>Register</h2>
+        <input type="text" id="registerUsername" placeholder="Username" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <button id="registerButton">Register</button>
+    </div>
 
-<div id="loginForm">
-    <input type="text" id="usernameInput" placeholder="Enter your username" />
-    <button onclick="login()">Login</button>
+    <div class="message" id="message"></div>
+
+    <!-- Login Form -->
+    <div class="form" id="loginForm" style="display: none;">
+        <h2>Login</h2>
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button id="loginButton">Login</button>
+        <button class="backButton" id="backToRegisterButton">Back to Register</button>
+    </div>
+
+    <!-- Post Section -->
+    <div id="postSection" style="display: none;">
+        <div class="post-input">
+            <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+            <button id="postButton">Post</button>
+            <button id="logoutButton">Logout</button> <!-- Logout button -->
+        </div>
+        <div class="posts" id="postsContainer"></div>
+    </div>
 </div>
-
-<div id="welcomeMessage"></div>
-
-<div id="postForm">
-    <input type="file" id="imageInput" accept="image/*" />
-    <button onclick="addPost()">Post</button>
-</div>
-
-<div id="posts"></div>
 
 <script>
-    let posts = JSON.parse(localStorage.getItem('posts')) || [];
+    const registerButton = document.getElementById('registerButton');
+    const loginButton = document.getElementById('loginButton');
+    const postButton = document.getElementById('postButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const backToRegisterButton = document.getElementById('backToRegisterButton');
+    const postContent = document.getElementById('postContent');
+    const postsContainer = document.getElementById('postsContainer');
+    const messageDiv = document.getElementById('message');
 
-    // Show the login form on page load
-    document.getElementById('loginForm').style.display = 'block';
+    let currentUser = null;
 
-    function login() {
-        const usernameInput = document.getElementById('usernameInput');
-        const username = usernameInput.value.trim();
-
-        if (!username) {
-            alert('Please enter a username.');
-            return;
+    registerButton.addEventListener('click', function() {
+        const username = document.getElementById('registerUsername').value.trim();
+        const password = document.getElementById('registerPassword').value.trim();
+        if (username && password) {
+            if (localStorage.getItem(username)) {
+                showMessage('Username already exists. Please choose another.');
+            } else {
+                localStorage.setItem(username, password);
+                showMessage('Registration successful! You can now log in.', 'green');
+                toggleLoginForm();
+            }
+        } else {
+            showMessage('Please fill in all fields.');
         }
+    });
 
-        // Hide the login form and show the welcome message
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('welcomeMessage').innerHTML = `
-            <strong>Welcome, ${username}!</strong>
-        `;
-        document.getElementById('welcomeMessage').style.display = 'block';
+    loginButton.addEventListener('click', function() {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const storedPassword = localStorage.getItem(username);
 
-        // Show the post form
-        document.getElementById('postForm').style.display = 'block';
-    }
-
-    function addPost() {
-        const imageInput = document.getElementById('imageInput');
-        const username = document.getElementById('usernameInput').value.trim();
-        const imageFile = imageInput.files[0];
-
-        if (imageFile && !['image/jpeg', 'image/png', 'image/gif'].includes(imageFile.type)) {
-            alert('Please upload a valid image (JPEG, PNG, GIF).');
-            return;
+        if (storedPassword && storedPassword === password) {
+            currentUser = username;
+            showMessage(`Welcome, ${currentUser}!`, 'green');
+            loadPosts();
+            togglePostSection();
+        } else {
+            showMessage('Invalid username or password.');
         }
+    });
 
-        if (imageFile) {
-            const newPost = {
-                username: username,
-                text: '', // No text input
+    backToRegisterButton.addEventListener('click', function() {
+        toggleRegisterForm();
+    });
+
+    postButton.addEventListener('click', function() {
+        const content = postContent.value.trim();
+        if (content) {
+            const post = {
+                username: currentUser,
+                content: content,
+                timestamp: new Date().toLocaleString(),
                 likes: 0,
                 dislikes: 0,
-                commands: [],
-                image: URL.createObjectURL(imageFile)
+                comments: []
             };
-            posts.push(newPost);
-            savePosts();
-            renderPosts();
-            imageInput.value = '';
+            savePost(post);
+            renderPost(post);
+            postContent.value = ''; // Clear the input
         }
-    }
+    });
 
-    function renderPosts() {
-        const postsContainer = document.getElementById('posts');
-        postsContainer.innerHTML = '';
+    logoutButton.addEventListener('click', function() {
+        currentUser = null;
+        showMessage('You have logged out.');
+        toggleLoginForm();
+    });
 
-        posts.forEach((post, index) => {
-            const postContainer = document.createElement('div');
-            postContainer.className = 'post';
-            postContainer.innerHTML = `
-                <div>
-                    <strong>${post.username}</strong> posted:
-                </div>
-                ${post.image ? `<img src="${post.image}" class="imagePreview" alt="Post Image" />` : ''}
-                <button class="button like" onclick="likePost(${index})">Like 👍</button>
-                <button class="button dislike" onclick="dislikePost(${index})">Dislike 👎</button>
-                <button class="button command" onclick="toggleCommandInput(${index})">Command</button>
-                <button class="button delete" onclick="deletePost(${index})">Delete</button>
-                <span class="likesCount">${post.likes} Likes</span>
-                <span class="dislikesCount">${post.dislikes} Dislikes</span>
-                <div class="commandInput" id="commandInput${index}">
-                    <input type="text" placeholder="Enter command..." />
-                    <button onclick="submitCommand(${index})">Submit</button>
-                    <div>
-                        <button class="emojiButton" onclick="addEmoji(${index}, '😀')">😀</button>
-                        <button class="emojiButton" onclick="addEmoji(${index}, '❤️')">❤️</button>
-                        <button class="emojiButton" onclick="addEmoji(${index}, '👍')">👍</button>
-                        <button class="emojiButton" onclick="addEmoji(${index}, '🎉')">🎉</button>
-                    </div>
-                </div>
-                <div class="commandsList">
-                    ${post.commands.map(command => `<div><strong>${command.username}:</strong> ${command.text}</div>`).join('')}
-                </div>
-            `;
-            postsContainer.appendChild(postContainer);
-        });
-    }
-
-    function savePosts() {
+    function savePost(post) {
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        posts.push(post);
         localStorage.setItem('posts', JSON.stringify(posts));
     }
 
+    function loadPosts() {
+        postsContainer.innerHTML = ''; // Clear existing posts
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        posts.forEach((post, index) => renderPost(post, index));
+    }
+
+    function renderPost(post, index) {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+        postDiv.innerHTML = `
+            <strong>${post.username} (${post.timestamp}):</strong> ${post.content} <br>
+            <button class="likeButton" onclick="likePost(${index})">👍 Like (${post.likes})</button>
+            <button class="dislikeButton" onclick="dislikePost(${index})">👎 Dislike (${post.dislikes})</button>
+            <button class="deleteButton" onclick="deletePost(${index})">Delete</button>
+            <div class="comment-section">
+                <textarea id="commentInput${index}" placeholder="Add a comment..."></textarea>
+                <button onclick="addComment(${index})">Comment</button>
+                <div id="commentsContainer${index}">${renderComments(post.comments)}</div>
+            </div>
+        `;
+        postsContainer.prepend(postDiv);
+    }
+
+    function renderComments(comments) {
+        return comments.map(c => `<strong>${c.username}:</strong> ${c.comment}<br>`).join('');
+    }
+
     function likePost(index) {
-        posts[index].likes++;
-        savePosts();
-        renderPosts();
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        posts[index].likes += 1;
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts(); // Reload posts to update like count
     }
 
     function dislikePost(index) {
-        posts[index].dislikes++;
-        savePosts();
-        renderPosts();
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        posts[index].dislikes += 1;
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts(); // Reload posts to update dislike count
     }
 
-    function toggleCommandInput(index) {
-        const commandInput = document.getElementById(`commandInput${index}`);
-        commandInput.style.display = commandInput.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function submitCommand(index) {
-        const commandInput = document.querySelector(`#commandInput${index} input`);
-        const commandText = commandInput.value.trim();
-        const username = posts[index].username;
-
-        if (commandText) {
-            posts[index].commands.push({ username, text: commandText });
-            commandInput.value = '';
-            toggleCommandInput(index);
-            savePosts();
-            renderPosts();
+    function addComment(index) {
+        const commentInput = document.getElementById(`commentInput${index}`);
+        const comment = commentInput.value.trim();
+        if (comment) {
+            const posts = JSON.parse(localStorage.getItem('posts'));
+            posts[index].comments.push({ username: currentUser, comment });
+            localStorage.setItem('posts', JSON.stringify(posts));
+            commentInput.value = ''; // Clear the input
+            loadPosts(); // Reload posts to show new comment
         }
     }
 
-    function addEmoji(index, emoji) {
-        const username = posts[index].username;
-        posts[index].commands.push({ username, text: emoji });
-        savePosts();
-        renderPosts();
-    }
-
     function deletePost(index) {
-        posts.splice(index, 1);
-        savePosts();
-        renderPosts();
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        posts.splice(index, 1); // Remove post at index
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts(); // Reload posts to update display
     }
 
-    renderPosts();
+    function toggleLoginForm() {
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('postSection').style.display = 'none'; // Ensure post section is hidden
+    }
+
+    function toggleRegisterForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+
+    function togglePostSection() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('postSection').style.display = 'block';
+    }
+
+    function showMessage(msg, color = 'red') {
+        messageDiv.textContent = msg;
+        messageDiv.style.color = color;
+    }
 </script>
 
 </body>
