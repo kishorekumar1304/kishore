@@ -5,46 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</title>
     <style>
-        body { 
-            font-family: Arial; 
-            margin: 20px; 
-            background-color: orange; /* Changed background color to orange */
+        body {
+            font-family: 'Verdana', sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9; /* Light gray background */
+            color: #333; /* Dark text color */
         }
-        h1 { 
-            text-align: center; 
-            color: red; 
+        h1 {
+            text-align: center;
+            color: #e74c3c; /* Bright red */
+            font-size: 2.5em;
+            margin-bottom: 20px;
         }
-        #restaurant-list { display: flex; flex-direction: column; }
-        .restaurant { 
-            border: 1px solid #ccc; 
-            margin: 10px 0; 
-            padding: 10px; 
-            display: flex; 
-            align-items: center; 
-            background-color: white; /* Set the background color to white */
+        #restaurant-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 0 auto;
         }
-        .restaurant img { width: 100px; margin-right: 20px; cursor: pointer; }
-        button { background-color: #28a745; color: white; border: none; padding: 10px; cursor: pointer; }
-        #modal, #image-modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 60px; }
-        #modal-content, #image-modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 300px; }
-        #large-image { width: 100%; }
-        .order-section { display: flex; justify-content: space-between; margin-top: 40px; }
-        .box, .payment-box { 
-            border: 1px solid #ccc; 
-            padding: 20px; 
-            width: 30%; 
-            text-align: center; 
-            background-color: white; /* Set the background color to white */
+        .restaurant {
+            border: 1px solid #ccc;
+            border-radius: 8px; /* Rounded corners */
+            background-color: #fff; /* White background */
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            transition: transform 0.3s;
         }
-        #food-items ul { list-style-type: none; padding: 0; }
-        #food-items li { margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }
-        #food-items button { background-color: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 3px; }
-        #total-cost, #confirmation-message { margin-top: 15px; font-weight: bold; display: none; }
+        .restaurant:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+        }
+        .restaurant img {
+            width: 100%;
+            border-radius: 8px; /* Image corners rounded */
+            cursor: pointer;
+        }
+        button {
+            background-color: #3498db; /* Blue button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+        #modal, #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            padding-top: 60px;
+        }
+        #modal-content, #image-modal-content {
+            background-color: #fff; /* White background for modals */
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 8px; /* Rounded corners */
+            width: 300px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        #large-image {
+            width: 100%;
+            border-radius: 8px; /* Image corners rounded */
+        }
+        .order-section {
+            display: flex;
+            flex-wrap: wrap; /* Wrap on small screens */
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .box, .payment-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+            background-color: #fff; /* White background */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            margin-bottom: 20px; /* Space between boxes */
+        }
+        #food-items ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #food-items li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #food-items button {
+            background-color: #2ecc71; /* Green button */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+        }
+        #total-cost, #confirmation-message {
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>𝓘𝓝𝓕𝓞 𝓕𝓞𝓞𝓓 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</h1>
-    <p>RESTAURANT NEARBY YOUR LOCATION...</p>
+    <h1>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</h1>
+    <p style="text-align:center; font-size: 1.2em;">RESTAURANT NEARBY YOUR LOCATION...</p>
     <div id="restaurant-list">
         <div class="restaurant">
             <img src="https://www.yello.ae/img/ae/e/1652795460-18-showbiz-pizza-place.png" alt="Pizza Place" onclick="openImageModal(this.src)">
@@ -111,7 +185,7 @@
             <h3>Review</h3>
             <button onclick="toggleReview()">Write a Review</button>
             <div id="review-section">
-                <textarea id="review-input" placeholder="Write your review here..."></textarea><br>
+                <textarea id="review-input" placeholder="Write your review here..." style="width: 100%;"></textarea><br>
                 <button id="submitReview" onclick="submitReview()">Submit Review</button>
             </div>
         </div>
@@ -123,13 +197,13 @@
         let selectedRestaurant = '', totalCost = 0, orderedItems = { "Pizza Place": [], "Sushi Spot": [], "Burger Joint": [] }, reviews = {};
         const menuItems = {
             "Pizza Place": [
-                { name: "Margherita Pizza", price: 10.99, image: "https://media.istockphoto.com/id/1280329631/photo/italian-pizza-margherita-with-tomatoes-and-mozzarella-cheese-on-wooden-cutting-board-close-up.jpg?s=612x612&w=0&k=20&c=CFDDjavIC5l8Zska16UZRZDXDwd47fwmRsUNzY0Ym6o=" },
-                { name: "Pepperoni Pizza", price: 12.99, image: "https://media.istockphoto.com/id/521403691/photo/hot-homemade-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=PaISuuHcJWTEVoDKNnxaHy7L2BTUkyYZ06hYgzXmTbo=" },
-                { name: "Veggie Pizza", price: 11.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiVGAmHFUdXFYicWIdyRi4yOeopHzRC688KQ&s" }
+                { name: "Margherita Pizza", price: 10.99, image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.gettyimages.in%2Fphotos%2Fmargherita-pizza&psig=AOvVaw2xG_GsniWvS93pzTrJITC4&ust=1729660557796000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMiivLCdoYkDFQAAAAAdAAAAABAE" },
+                { name: "Pepperoni Pizza", price: 12.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/5S8gU39FzG4G6yZlU4K03U/4e7b43ed967b60127631797de2b13947/pepperoni_pizza.png?v=1717049124" },
+                { name: "BBQ Chicken Pizza", price: 14.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/7F0OCtZzT4w7W9vM8e74F4/88347cc1621d72a947bcbb1ae6a5d5d4/bbq_chicken_pizza.png?v=1717049124" }
             ],
             "Sushi Spot": [
-                { name: "California Roll", price: 8.99, image: "https://media.istockphoto.com/id/1155475113/photo/delicious-sushi-rolls-on-the-black-plate-on-wooden-background.jpg?s=612x612&w=0&k=20&c=F3cCdUDmKzOxqVnU1BEdoyZt7M9AOr-FwnCp1fL_LqA=" },
-                { name: "Tuna Sashimi", price: 12.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/1rIeyVt6Igql21s2vELedJ/b10a728bb7b720593e60c165237245e1/Step_3_-_Tuna_Lime_Sashimi.png?v=1717049124" },
+                { name: "Salmon Sashimi", price: 13.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/7eBiVzJ1xzGkmUhs0WeH7n/2b2abfba5ab629af5d5da19fa29c2643/salmon_sashimi.png?v=1717049124" },
+                { name: "Tuna Lime Sashimi", price: 14.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/1rIeyVt6Igql21s2vELedJ/b10a728bb7b720593e60c165237245e1/Step_3_-_Tuna_Lime_Sashimi.png?v=1717049124" },
                 { name: "Miso Soup", price: 4.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/aq1n9ewACoBzXxVRxszxl/d008f64a8c4a2a1bb051b2f1b05b4794/AdobeStock_76848416.jpeg" }
             ],
             "Burger Joint": [
