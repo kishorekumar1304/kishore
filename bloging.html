@@ -88,6 +88,10 @@
         .backButton:hover {
             background-color: #0056b3;
         }
+        .image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -115,6 +119,8 @@
     <div id="postSection" style="display: none;">
         <div class="post-input">
             <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+            <input type="file" id="postImage" accept="image/*">
+            <img id="imagePreview" class="image-preview" style="display:none;">
             <button id="postButton">Post</button>
             <button id="logoutButton">Logout</button>
         </div>
@@ -134,6 +140,8 @@
     const postsContainer = document.getElementById('postsContainer');
     const messageDiv = document.getElementById('message');
     const clearDataButton = document.getElementById('clearDataButton');
+    const postImage = document.getElementById('postImage');
+    const imagePreview = document.getElementById('imagePreview');
 
     let currentUser = null;
 
@@ -172,20 +180,40 @@
         toggleRegisterForm();
     });
 
+    postImage.addEventListener('change', function() {
+        const file = postImage.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = '';
+            imagePreview.style.display = 'none';
+        }
+    });
+
     postButton.addEventListener('click', function() {
         const content = postContent.value.trim();
-        if (content) {
+        const image = imagePreview.src;
+
+        if (content || image) {
             const post = {
                 username: currentUser,
                 content: content,
                 timestamp: new Date().toLocaleString(),
                 likes: 0,
                 dislikes: 0,
-                comments: []
+                comments: [],
+                image: image
             };
             savePost(post);
             renderPost(post);
             postContent.value = ''; // Clear the input
+            postImage.value = ''; // Clear the image input
+            imagePreview.style.display = 'none'; // Hide image preview
         }
     });
 
@@ -217,6 +245,7 @@
         postDiv.className = 'post';
         postDiv.innerHTML = `
             <strong>${post.username} (${post.timestamp}):</strong> ${post.content} <br>
+            ${post.image ? `<img src="${post.image}" class="image-preview">` : ''}
             <button class="likeButton" onclick="likePost(${index}, this)">👍 Like <span id="likeCount${index}">${post.likes}</span></button>
             <button class="dislikeButton" onclick="dislikePost(${index})">👎 Dislike (${post.dislikes})</button>
             <button class="deleteButton" onclick="deletePost(${index})">Delete</button>
