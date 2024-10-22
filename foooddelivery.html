@@ -3,101 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>24/7 FOOD DELIVERY</title>
+    <title>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</title>
     <style>
         body { 
             font-family: Arial; 
             margin: 20px; 
-            background-color: #f0f0f0; /* skyblue background */
+            background-color: orange; /* Changed background color to orange */
         }
         h1 { 
             text-align: center; 
             color: red; 
         }
-        #restaurant-list { 
-            display: flex; 
-            flex-direction: column; 
-        }
+        #restaurant-list { display: flex; flex-direction: column; }
         .restaurant { 
             border: 1px solid #ccc; 
             margin: 10px 0; 
             padding: 10px; 
             display: flex; 
             align-items: center; 
-            background-color: white; /* White background for restaurants */
+            background-color: white; /* Set the background color to white */
         }
-        .restaurant img { 
-            width: 100px; 
-            margin-right: 20px; 
-            cursor: pointer; 
-        }
-        button { 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            padding: 10px; 
-            cursor: pointer; 
-        }
-        #modal, #image-modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.4); 
-            padding-top: 60px; 
-        }
-        #modal-content, #image-modal-content { 
-            background-color: #fefefe; 
-            margin: 5% auto; 
-            padding: 20px; 
-            border: 1px solid #888; 
-            width: 300px; 
-        }
-        #large-image { 
-            width: 100%; 
-        }
-        .order-section { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 40px; 
-        }
+        .restaurant img { width: 100px; margin-right: 20px; cursor: pointer; }
+        button { background-color: #28a745; color: white; border: none; padding: 10px; cursor: pointer; }
+        #modal, #image-modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); padding-top: 60px; }
+        #modal-content, #image-modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 300px; }
+        #large-image { width: 100%; }
+        .order-section { display: flex; justify-content: space-between; margin-top: 40px; }
         .box, .payment-box { 
             border: 1px solid #ccc; 
             padding: 20px; 
             width: 30%; 
             text-align: center; 
-            background-color: white; /* White background for sections */
+            background-color: white; /* Set the background color to white */
         }
-        #food-items ul { 
-            list-style-type: none; 
-            padding: 0; 
-        }
-        #food-items li { 
-            margin: 5px 0; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        #food-items button { 
-            background-color: #007bff; 
-            color: white; 
-            padding: 5px 10px; 
-            border: none; 
-            border-radius: 3px; 
-        }
-        #total-cost, #confirmation-message { 
-            margin-top: 15px; 
-            font-weight: bold; 
-            display: none; 
-        }
+        #food-items ul { list-style-type: none; padding: 0; }
+        #food-items li { margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }
+        #food-items button { background-color: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 3px; }
+        #total-cost, #confirmation-message { margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
-    <h1>24/7 DELIVERY</h1>
+    <h1>𝓘𝓝𝓕𝓞 𝓕𝓞𝓞𝓓 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</h1>
     <p>RESTAURANT NEARBY YOUR LOCATION...</p>
     <div id="restaurant-list">
         <div class="restaurant">
@@ -182,13 +128,13 @@
                 { name: "Veggie Pizza", price: 11.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiVGAmHFUdXFYicWIdyRi4yOeopHzRC688KQ&s" }
             ],
             "Sushi Spot": [
-                { name: "California Roll", price: 8.99, image: "https://media.istockphoto.com/id/115547349/photo/california-roll.jpg?s=612x612&w=0&k=20&c=cMqL7kKiMZdfRYe0HLhpo9IptPSTeULGgYj7PQzUo28=" },
-                { name: "Tuna Sashimi", price: 15.99, image: "https://media.istockphoto.com/id/1171358354/photo/sushi-on-a-plate.jpg?s=612x612&w=0&k=20&c=F0LVDxToed6_tK7xt_S_vOqsh47_yO8WnZgWjBd7R1Y=" },
-                { name: "Salmon Nigiri", price: 14.99, image: "https://media.istockphoto.com/id/1292581113/photo/sushi-nigiri-with-salmon-and-avocado.jpg?s=612x612&w=0&k=20&c=8yQbe44lFRVMTgBN8o1-0BUl_PXbTRMI8nBUgB4kS2I=" }
+                { name: "California Roll", price: 8.99, image: "https://media.istockphoto.com/id/1155475113/photo/delicious-sushi-rolls-on-the-black-plate-on-wooden-background.jpg?s=612x612&w=0&k=20&c=F3cCdUDmKzOxqVnU1BEdoyZt7M9AOr-FwnCp1fL_LqA=" },
+                { name: "Tuna Sashimi", price: 12.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/1rIeyVt6Igql21s2vELedJ/b10a728bb7b720593e60c165237245e1/Step_3_-_Tuna_Lime_Sashimi.png?v=1717049124" },
+                { name: "Miso Soup", price: 4.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/aq1n9ewACoBzXxVRxszxl/d008f64a8c4a2a1bb051b2f1b05b4794/AdobeStock_76848416.jpeg" }
             ],
             "Burger Joint": [
-                { name: "Cheeseburger", price: 9.99, image: "https://media.istockphoto.com/id/472547534/photo/cheeseburger-on-a-bun.jpg?s=612x612&w=0&k=20&c=SMkWSHDoYgtgEmmUnPhJotE5hByREYYTc_2n4O0Wz_U=" },
-                { name: "Veggie Burger", price: 8.99, image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZlZyUyMGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D" },
+                { name: "Cheeseburger", price: 9.99, image: "https://cdn.pixabay.com/photo/2024/04/26/05/52/cheeseburger-4151737_1280.jpg" },
+                { name: "Veggie Burger", price: 8.99, image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZlZyUyMGJ1cmdlcnxlbnwwfHwwfHwx8MA%3D%3D" },
                 { name: "Fries", price: 3.99, image: "https://plus.unsplash.com/premium_photo-1672774750509-bc9ff226f3e8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D" }
             ]
         };
