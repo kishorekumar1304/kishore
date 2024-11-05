@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</title>
+    <title>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓮𝓡𝓨 24/7</title>
     <style>
         body {
             font-family: 'Verdana', sans-serif;
@@ -117,7 +117,7 @@
     </style>
 </head>
 <body>
-    <h1>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓔𝓡𝓨 24/7</h1>
+    <h1>𝓘𝓝𝓕𝓞 𝓕𝓞𝓸𝓭 𝓓𝓔𝓛𝓘𝓥𝓮𝓡𝓨 24/7</h1>
     <p style="text-align:center; font-size: 1.2em;">RESTAURANT NEARBY YOUR LOCATION...</p>
     <div id="restaurant-list">
         <div class="restaurant">
@@ -147,7 +147,26 @@
                 <button onclick="openModal('Burger Joint')">Order Food</button>
             </div>
         </div>
+        <div class="restaurant">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuIqoZBmiAmCEOwwX0LkieQm4dMGBKQmp5Yg&s" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Salt and Pepper</h2>
+                <p>Location: 101 Spice Rd, Food City</p>
+                <p>Rating: ★★★★☆ (4.7)</p>
+                <button onclick="openModal('Salt and Pepper')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="https://img.freepik.com/premium-psd/chicken-biryani-restaurant-food-design-template_780387-983.jpg" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Dash Dell Biryani Spot</h2>
+                <p>Location: 202 Biryani Lane, Food City</p>
+                <p>Rating: ★★★★☆ (4.6)</p>
+                <button onclick="openModal('Dash Dell Biryani Spot')">Order Food</button>
+            </div>
+        </div>
     </div>
+
     <div id="modal">
         <div id="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -164,12 +183,14 @@
             </div>
         </div>
     </div>
+
     <div id="image-modal">
         <div id="image-modal-content">
             <span class="close" onclick="closeImageModal()">&times;</span>
             <img id="large-image" src="" alt="Restaurant Image">
         </div>
     </div>
+
     <div class="order-section">
         <div class="box">
             <h3>Orders</h3>
@@ -190,15 +211,16 @@
             </div>
         </div>
     </div>
+
     <div id="confirmation-message">Your order has been placed successfully!</div>
     <button onclick="confirmOrder()">Confirm Order</button>
 
     <script>
-        let selectedRestaurant = '', totalCost = 0, orderedItems = { "Pizza Place": [], "Sushi Spot": [], "Burger Joint": [] }, reviews = {};
+        let selectedRestaurant = '', totalCost = 0, orderedItems = { "Pizza Place": [], "Sushi Spot": [], "Burger Joint": [], "Salt and Pepper": [], "Dash Dell Biryani Spot": [] }, reviews = {};
         const menuItems = {
             "Pizza Place": [
                 { name: "Margherita Pizza", price: 10.99, image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.gettyimages.in%2Fphotos%2Fmargherita-pizza&psig=AOvVaw2xG_GsniWvS93pzTrJITC4&ust=1729660557796000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMiivLCdoYkDFQAAAAAdAAAAABAE" },
-                { name: "Pepperoni Pizza", price: 12.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/5S8gU39FzG4G6yZlU4K03U/4e7b43ed967b60127631797de2b13947/pepperoni_pizza.png?v=1717049124" },
+                { name: "Pepperoni Pizza", price: 12.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzhXv1LnUwFQwJ8mUrEBa9WjdL4f8bAhM-hA&s" },
                 { name: "BBQ Chicken Pizza", price: 14.99, image: "https://images.ctfassets.net/3s5io6mnxfqz/7F0OCtZzT4w7W9vM8e74F4/88347cc1621d72a947bcbb1ae6a5d5d4/bbq_chicken_pizza.png?v=1717049124" }
             ],
             "Sushi Spot": [
@@ -210,6 +232,16 @@
                 { name: "Cheeseburger", price: 9.99, image: "https://cdn.pixabay.com/photo/2024/04/26/05/52/cheeseburger-4151737_1280.jpg" },
                 { name: "Veggie Burger", price: 8.99, image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHZlZyUyMGJ1cmdlcnxlbnwwfHwwfHwx8MA%3D%3D" },
                 { name: "Fries", price: 3.99, image: "https://plus.unsplash.com/premium_photo-1672774750509-bc9ff226f3e8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlbmNoJTIwZnJpZXN8ZW58MHx8MHx8fDA%3D" }
+            ],
+            "Salt and Pepper": [
+                { name: "Spicy Chicken Wings", price: 8.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSssd0wnFRfDCNue_QenW2M83OdbHhvWIQsaw&s" },
+                { name: "Masala Fries", price: 4.99, image: "https://ministryofcurry.com/wp-content/uploads/2021/01/air-fryer-spicy-french-fries_-2.jpg" },
+                { name: "Paneer Tikka", price: 10.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToeBoVqXmwjEjpYEGK1Y1AZi964zw-iK-Vqg&s" }
+            ],
+            "Dash Dell Biryani Spot": [
+                { name: "Hyderabadi Biryani", price: 15.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDA7zYlrnD0n8KlYvsTdqwPWHBBOrIT9euzQ&s" },
+                { name: "Chicken Biryani", price: 13.99, image: "https://www.sandyathome.com/wp-content/uploads/2019/04/chicken-biryani-recipe.png" },
+                { name: "Mutton Biryani", price: 17.99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf0MtNWb8DMT19mbjSkn_sa8jzloCKA95OdA&s" }
             ]
         };
 
@@ -235,7 +267,7 @@
             alert(`${itemName} has been added. Current total: $${totalCost.toFixed(2)}.`);
         }
 
-        function viewOrders() {
+        function viewOrders() {  
             const orderSummary = document.getElementById('order-summary');
             let summary = `<h3>Your Orders:</h3>`;
             for (const restaurant in orderedItems) {
@@ -250,7 +282,7 @@
 
         function cancelOrder() {
             totalCost = 0; 
-            orderedItems = { "Pizza Place": [], "Sushi Spot": [], "Burger Joint": [] };
+            orderedItems = { "Pizza Place": [], "Sushi Spot": [], "Burger Joint": [], "Salt and Pepper": [], "Dash Dell Biryani Spot": [] };
             document.getElementById('total-cost').innerText = `Total Cost: $0.00`;
             document.getElementById('food-items').innerHTML = ''; 
             document.getElementById('order-summary').innerHTML = '';
