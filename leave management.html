@@ -1,0 +1,138 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .leave-form,
+        .leave-summary {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        select, input[type="number"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .leave-summary p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .leave-summary span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Leave Management System</h2>
+
+        <!-- Leave Form -->
+        <div class="leave-form">
+            <h3>Apply for Leave</h3>
+            <form id="leaveForm">
+                <label for="leaveType">Leave Type:</label>
+                <select id="leaveType" required>
+                    <option value="casual">Casual Leave</option>
+                    <option value="medical">Medical Leave</option>
+                </select>
+
+                <label for="leaveDays">Number of Days:</label>
+                <input type="number" id="leaveDays" min="1" required>
+
+                <input type="submit" value="Apply Leave">
+            </form>
+        </div>
+
+        <!-- Leave Summary -->
+        <div class="leave-summary">
+            <h3>Leave Balance</h3>
+            <p><span>Casual Leave:</span> <span id="casualLeaveBalance">12</span> days</p>
+            <p><span>Medical Leave:</span> <span id="medicalLeaveBalance">10</span> days</p>
+        </div>
+    </div>
+
+    <script>
+        // Initial leave balances
+        let casualLeaveBalance = 12;
+        let medicalLeaveBalance = 10;
+
+        // Function to update the leave balances
+        function updateLeaveSummary() {
+            document.getElementById('casualLeaveBalance').textContent = casualLeaveBalance;
+            document.getElementById('medicalLeaveBalance').textContent = medicalLeaveBalance;
+        }
+
+        // Form submission logic
+        document.getElementById('leaveForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const leaveType = document.getElementById('leaveType').value;
+            const leaveDays = parseInt(document.getElementById('leaveDays').value);
+
+            // Check if the leave days requested are less than or equal to the available balance
+            if (leaveType === 'casual' && leaveDays <= casualLeaveBalance) {
+                casualLeaveBalance -= leaveDays; // Deduct the leave days
+                alert(`You have successfully applied for ${leaveDays} days of Casual Leave.`);
+            } else if (leaveType === 'medical' && leaveDays <= medicalLeaveBalance) {
+                medicalLeaveBalance -= leaveDays; // Deduct the leave days
+                alert(`You have successfully applied for ${leaveDays} days of Medical Leave.`);
+            } else {
+                alert("Insufficient leave balance or invalid number of days.");
+            }
+
+            // Update the leave summary after applying for leave
+            updateLeaveSummary();
+
+            // Clear the form input
+            document.getElementById('leaveDays').value = '';
+        });
+
+        // Initial leave balance display
+        updateLeaveSummary();
+    </script>
+    
+</body>
+</html>
