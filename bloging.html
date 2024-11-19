@@ -210,7 +210,6 @@
                 image: image
             };
             savePost(post);
-            renderPost(post);
             postContent.value = ''; // Clear the input
             postImage.value = ''; // Clear the image input
             imagePreview.style.display = 'none'; // Hide image preview
@@ -232,6 +231,7 @@
         const posts = JSON.parse(localStorage.getItem('posts')) || [];
         posts.push(post);
         localStorage.setItem('posts', JSON.stringify(posts));
+        renderPost(post, posts.length - 1); // Render the newly added post immediately
     }
 
     function loadPosts() {
@@ -246,8 +246,8 @@
         postDiv.innerHTML = `
             <strong>${post.username} (${post.timestamp}):</strong> ${post.content} <br>
             ${post.image ? `<img src="${post.image}" class="image-preview">` : ''}
-            <button class="likeButton" onclick="likePost(${index}, this)">👍 Like <span id="likeCount${index}">${post.likes}</span></button>
-            <button class="dislikeButton" onclick="dislikePost(${index})">👎 Dislike (${post.dislikes})</button>
+            <button class="likeButton" onclick="likePost(${index})">👍 Like <span id="likeCount${index}">${post.likes}</span></button>
+            <button class="dislikeButton" onclick="dislikePost(${index})">👎 Dislike <span id="dislikeCount${index}">${post.dislikes}</span></button>
             <button class="deleteButton" onclick="deletePost(${index})">Delete</button>
             <div class="comment-section">
                 <textarea id="commentInput${index}" placeholder="Add a comment..."></textarea>
@@ -262,7 +262,7 @@
         return comments.map(c => `<strong>${c.username}:</strong> ${c.comment}<br>`).join('');
     }
 
-    function likePost(index, button) {
+    function likePost(index) {
         const posts = JSON.parse(localStorage.getItem('posts'));
         posts[index].likes += 1;
         localStorage.setItem('posts', JSON.stringify(posts));
@@ -276,7 +276,10 @@
         const posts = JSON.parse(localStorage.getItem('posts'));
         posts[index].dislikes += 1;
         localStorage.setItem('posts', JSON.stringify(posts));
-        loadPosts(); // Reload posts to update dislike count
+
+        // Update the displayed dislike count
+        const dislikeCountElement = document.getElementById(`dislikeCount${index}`);
+        dislikeCountElement.textContent = posts[index].dislikes;
     }
 
     function addComment(index) {
