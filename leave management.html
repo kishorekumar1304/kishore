@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,24 +6,25 @@
     <title>Leave Management System</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f0f8ff;
         }
 
         .container {
-            width: 50%;
+            width: 60%;
             margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
-            color: #333;
+            color: #4CAF50;
+            font-size: 2em;
         }
 
         .leave-form,
@@ -34,20 +35,23 @@
         label {
             display: block;
             margin: 10px 0 5px;
+            font-size: 1.1em;
         }
 
-        select, input[type="number"], input[type="submit"] {
+        select, input[type="number"], input[type="date"], input[type="submit"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 1em;
         }
 
         input[type="submit"] {
             background-color: #4CAF50;
             color: white;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         input[type="submit"]:hover {
@@ -55,12 +59,35 @@
         }
 
         .leave-summary p {
-            font-size: 18px;
-            margin: 10px 0;
+            font-size: 1.2em;
+            margin: 12px 0;
+            padding-left: 20px;
         }
 
         .leave-summary span {
             font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .form-section {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-top: 15px;
+            color: white;
+            background-color: #f44336;
+            display: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .alert.success {
+            background-color: #4CAF50;
         }
     </style>
 </head>
@@ -69,18 +96,26 @@
     <div class="container">
         <h2>Leave Management System</h2>
 
+        <!-- Alert for feedback -->
+        <div id="alertBox" class="alert"></div>
+
         <!-- Leave Form -->
-        <div class="leave-form">
+        <div class="leave-form form-section">
             <h3>Apply for Leave</h3>
             <form id="leaveForm">
                 <label for="leaveType">Leave Type:</label>
                 <select id="leaveType" required>
                     <option value="casual">Casual Leave</option>
                     <option value="medical">Medical Leave</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="vacation">Vacation Leave</option>
                 </select>
 
                 <label for="leaveDays">Number of Days:</label>
                 <input type="number" id="leaveDays" min="1" required>
+
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" required>
 
                 <input type="submit" value="Apply Leave">
             </form>
@@ -91,6 +126,8 @@
             <h3>Leave Balance</h3>
             <p><span>Casual Leave:</span> <span id="casualLeaveBalance">12</span> days</p>
             <p><span>Medical Leave:</span> <span id="medicalLeaveBalance">10</span> days</p>
+            <p><span>Sick Leave:</span> <span id="sickLeaveBalance">8</span> days</p>
+            <p><span>Vacation Leave:</span> <span id="vacationLeaveBalance">15</span> days</p>
         </div>
     </div>
 
@@ -98,11 +135,24 @@
         // Initial leave balances
         let casualLeaveBalance = 12;
         let medicalLeaveBalance = 10;
+        let sickLeaveBalance = 8;
+        let vacationLeaveBalance = 15;
 
-        // Function to update the leave balances
+        // Function to update the leave balances dynamically
         function updateLeaveSummary() {
             document.getElementById('casualLeaveBalance').textContent = casualLeaveBalance;
             document.getElementById('medicalLeaveBalance').textContent = medicalLeaveBalance;
+            document.getElementById('sickLeaveBalance').textContent = sickLeaveBalance;
+            document.getElementById('vacationLeaveBalance').textContent = vacationLeaveBalance;
+        }
+
+        // Function to show alerts (success or error)
+        function showAlert(message, isSuccess) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = 'alert ' + (isSuccess ? 'success' : 'error');
+            alertBox.style.display = 'block';
+            setTimeout(() => alertBox.style.display = 'none', 3000);
         }
 
         // Form submission logic
@@ -111,23 +161,52 @@
 
             const leaveType = document.getElementById('leaveType').value;
             const leaveDays = parseInt(document.getElementById('leaveDays').value);
+            const startDate = document.getElementById('startDate').value;
+
+            let leaveBalance = 0;
+            let leaveTypeText = '';
+
+            // Determine leave balance and type
+            switch (leaveType) {
+                case 'casual':
+                    leaveBalance = casualLeaveBalance;
+                    leaveTypeText = 'Casual Leave';
+                    break;
+                case 'medical':
+                    leaveBalance = medicalLeaveBalance;
+                    leaveTypeText = 'Medical Leave';
+                    break;
+                case 'sick':
+                    leaveBalance = sickLeaveBalance;
+                    leaveTypeText = 'Sick Leave';
+                    break;
+                case 'vacation':
+                    leaveBalance = vacationLeaveBalance;
+                    leaveTypeText = 'Vacation Leave';
+                    break;
+            }
 
             // Check if the leave days requested are less than or equal to the available balance
-            if (leaveType === 'casual' && leaveDays <= casualLeaveBalance) {
-                casualLeaveBalance -= leaveDays; // Deduct the leave days
-                alert(`You have successfully applied for ${leaveDays} days of Casual Leave.`);
-            } else if (leaveType === 'medical' && leaveDays <= medicalLeaveBalance) {
-                medicalLeaveBalance -= leaveDays; // Deduct the leave days
-                alert(`You have successfully applied for ${leaveDays} days of Medical Leave.`);
+            if (leaveDays <= leaveBalance) {
+                // Deduct the leave days based on leave type
+                switch (leaveType) {
+                    case 'casual': casualLeaveBalance -= leaveDays; break;
+                    case 'medical': medicalLeaveBalance -= leaveDays; break;
+                    case 'sick': sickLeaveBalance -= leaveDays; break;
+                    case 'vacation': vacationLeaveBalance -= leaveDays; break;
+                }
+
+                showAlert(`You have successfully applied for ${leaveDays} days of ${leaveTypeText} starting from ${startDate}.`, true);
             } else {
-                alert("Insufficient leave balance or invalid number of days.");
+                showAlert("Insufficient leave balance or invalid number of days.", false);
             }
 
             // Update the leave summary after applying for leave
             updateLeaveSummary();
 
-            // Clear the form input
+            // Clear the form input fields
             document.getElementById('leaveDays').value = '';
+            document.getElementById('startDate').value = '';
         });
 
         // Initial leave balance display
