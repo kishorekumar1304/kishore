@@ -99,7 +99,7 @@
             transform: scale(1.05);
         }
 
-        #productList {
+        #productList, #buyProducts {
             display: flex;
             flex-direction: column;
             gap: 30px;
@@ -136,6 +136,43 @@
         .hidden {
             display: none;
         }
+
+        .buy-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .buy-form input, .buy-form select {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #34495e;
+            border-radius: 5px;
+            background-color: #34495e;
+            color: #ecf0f1;
+            font-size: 16px;
+        }
+
+        .buy-form button {
+            width: 100%;
+            padding: 15px;
+            background-color: #f39c12;
+            border: none;
+            color: #111;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .buy-form button:hover {
+            background-color: #e67e22;
+        }
+
+        .confirmation-message {
+            margin-top: 20px;
+            color: #ecf0f1;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -144,6 +181,8 @@
         <nav>
             <button id="registerBtn">Register</button>
             <button id="loginBtn">Login</button>
+            <button id="sellProductsBtn">Sell Products</button>
+            <button id="buyProductsBtn">Buy Products</button>
         </nav>
     </header>
 
@@ -157,7 +196,7 @@
         </form>
     </section>
 
-    <section id="listing-section">
+    <section id="listing-section" class="hidden">
         <h2>Post a Product</h2>
         <form id="listingForm">
             <input type="text" id="productName" placeholder="Product Name" required>
@@ -169,12 +208,19 @@
         </form>
     </section>
 
-    <section id="listings">
+    <section id="buyProductsSection" class="hidden">
+        <h2>Buy Products</h2>
+        <div id="buyProducts"></div>
+    </section>
+
+    <section id="listings" class="hidden">
         <h2>Product Listings</h2>
         <div id="productList"></div>
     </section>
 
     <script>
+        let currentProduct = null;
+
         document.getElementById('listingForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -195,9 +241,42 @@
                     <p><strong>Price:</strong> $${price}</p>
                     <p>${description}</p>
                     <img src="${reader.result}" alt="${name}">
+                    <button class="buyBtn">BUY</button>
+                    <div class="buy-form">
+                        <h4>Enter Shipping Address</h4>
+                        <input type="text" id="address" placeholder="Shipping Address" required>
+                        <h4>Payment Method</h4>
+                        <select id="paymentMethod" required>
+                            <option value="creditCard">Credit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bankTransfer">Bank Transfer</option>
+                        </select>
+                        <button type="button" class="purchaseBtn">Confirm Purchase</button>
+                        <div class="confirmation-message hidden">Purchase Successful! Thank you for your order.</div>
+                    </div>
                 `;
 
                 productList.appendChild(productCard);
+
+                const buyButton = productCard.querySelector('.buyBtn');
+                buyButton.addEventListener('click', function() {
+                    currentProduct = productCard;
+                    const buyForm = productCard.querySelector('.buy-form');
+                    buyForm.style.display = 'block';
+                });
+
+                const purchaseButton = productCard.querySelector('.purchaseBtn');
+                purchaseButton.addEventListener('click', function() {
+                    const address = productCard.querySelector('#address').value;
+                    const paymentMethod = productCard.querySelector('#paymentMethod').value;
+                    if (address && paymentMethod) {
+                        const confirmationMessage = productCard.querySelector('.confirmation-message');
+                        confirmationMessage.style.display = 'block';
+                        productCard.querySelector('.buy-form').style.display = 'none';  // Hide form
+                    } else {
+                        alert("Please fill in all fields.");
+                    }
+                });
             };
 
             if (imageFile) {
@@ -215,6 +294,81 @@
         document.getElementById('loginBtn').addEventListener('click', function() {
             alert("Login functionality not implemented yet.");
         });
+
+        document.getElementById('sellProductsBtn').addEventListener('click', function() {
+            document.getElementById('listing-section').classList.remove('hidden');
+            document.getElementById('buyProductsSection').classList.add('hidden');
+            document.getElementById('listings').classList.add('hidden');
+        });
+
+        document.getElementById('buyProductsBtn').addEventListener('click', function() {
+            document.getElementById('listing-section').classList.add('hidden');
+            document.getElementById('buyProductsSection').classList.remove('hidden');
+            document.getElementById('listings').classList.add('hidden');
+            loadBuyProducts();
+        });
+
+        function loadBuyProducts() {
+            const buyProductsSection = document.getElementById('buyProducts');
+            buyProductsSection.innerHTML = '';
+
+            const sampleProducts = [
+                {
+                    name: 'Smartphone',
+                    category: 'Electronics',
+                    price: 200,
+                    description: 'A gently used smartphone with all accessories.',
+                    imageUrl: 'https://opsg-img-cdn-gl.heytapimg.com/epb/202406/26/IzcVfAu2kdJjoeYS.png'
+                },
+                {
+                    name: 'Gaming Laptop',
+                    category: 'Computers',
+                    price: 800,
+                    description: 'A high-performance laptop for gaming and work.',
+                    imageUrl: 'https://i.pcmag.com/imagery/reviews/06HnGEGjzlHopIl2HTTjJzT-1..v1706741783.jpg'
+                },
+                {
+                    name: 'Bluetooth Speaker',
+                    category: 'Audio',
+                    price: 50,
+                    description: 'Portable Bluetooth speaker with great sound.',
+                    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRw3OWwb-4gTUUgSx6PGvRr-kNPmYrpZSJewg&s'
+                },
+                {
+                   name: 'Bicycle',
+                    category: 'Sports',
+                    price: 150,
+                    description: 'Used bicycle in great condition.',
+                    imageUrl: 'https://www.shutterstock.com/image-photo/yellow-black-29er-mountainbike-thick-600nw-1498702814.jpg'
+             }
+            ];
+
+            sampleProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p><strong>Category:</strong> ${product.category}</p>
+                    <p><strong>Price:</strong> $${product.price}</p>
+                    <p>${product.description}</p>
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <button class="buyBtn">BUY</button>
+                    <div class="buy-form">
+                        <h4>Enter Shipping Address</h4>
+                        <input type="text" id="address" placeholder="Shipping Address" required>
+                        <h4>Payment Method</h4>
+                        <select id="paymentMethod" required>
+                            <option value="creditCard">Credit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bankTransfer">Bank Transfer</option>
+                        </select>
+                        <button type="button" class="purchaseBtn">Confirm Purchase</button>
+                        <div class="confirmation-message hidden">Purchase Successful! Thank you for your order.</div>
+                    </div>
+                `;
+                buyProductsSection.appendChild(productCard);
+            });
+        }
     </script>
 </body>
 </html>
