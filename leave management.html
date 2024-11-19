@@ -38,7 +38,7 @@
             font-size: 1.1em;
         }
 
-        select, input[type="number"], input[type="date"], input[type="submit"] {
+        select, input[type="number"], input[type="date"], input[type="submit"], .button {
             width: 100%;
             padding: 12px;
             margin-bottom: 20px;
@@ -55,6 +55,18 @@
         }
 
         input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
             background-color: #45a049;
         }
 
@@ -89,6 +101,44 @@
         .alert.success {
             background-color: #4CAF50;
         }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -98,6 +148,10 @@
 
         <!-- Alert for feedback -->
         <div id="alertBox" class="alert"></div>
+
+        <!-- Login and Current Status Buttons -->
+        <button class="button" id="loginButton">Login</button>
+        <button class="button" id="statusButton">Current Status</button>
 
         <!-- Leave Form -->
         <div class="leave-form form-section">
@@ -128,6 +182,18 @@
             <p><span>Medical Leave:</span> <span id="medicalLeaveBalance">10</span> days</p>
             <p><span>Sick Leave:</span> <span id="sickLeaveBalance">8</span> days</p>
             <p><span>Vacation Leave:</span> <span id="vacationLeaveBalance">15</span> days</p>
+        </div>
+    </div>
+
+    <!-- Modal for Current Status -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Current Leave Balance</h2>
+            <p><strong>Casual Leave:</strong> <span id="modalCasualLeave">12</span> days</p>
+            <p><strong>Medical Leave:</strong> <span id="modalMedicalLeave">10</span> days</p>
+            <p><strong>Sick Leave:</strong> <span id="modalSickLeave">8</span> days</p>
+            <p><strong>Vacation Leave:</strong> <span id="modalVacationLeave">15</span> days</p>
         </div>
     </div>
 
@@ -208,6 +274,30 @@
             document.getElementById('leaveDays').value = '';
             document.getElementById('startDate').value = '';
         });
+
+        // Modal functions for current status
+        const modal = document.getElementById("statusModal");
+        const btnStatus = document.getElementById("statusButton");
+        const span = document.getElementsByClassName("close")[0];
+
+        btnStatus.onclick = function() {
+            // Update modal with current leave balances
+            document.getElementById('modalCasualLeave').textContent = casualLeaveBalance;
+            document.getElementById('modalMedicalLeave').textContent = medicalLeaveBalance;
+            document.getElementById('modalSickLeave').textContent = sickLeaveBalance;
+            document.getElementById('modalVacationLeave').textContent = vacationLeaveBalance;
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
 
         // Initial leave balance display
         updateLeaveSummary();
